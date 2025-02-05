@@ -56,10 +56,9 @@ class TarefaAdmin(admin.ModelAdmin):
     """Define the admin pages for tarefas."""
 
     ordering = ["id"]
-    list_display = ["titulo", "categoria", "status", "prazo", "usuario"]
-    list_filter = ["status", "prazo", "categoria", "usuario"]
+    list_display = ["titulo", "descricao", "status", "prazo", "categoria", "usuario"]
     search_fields = ["titulo", "descricao"]
-    date_hierarchy = "prazo"
+    list_filter = ["status", "prazo", "categoria", "usuario"]
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):

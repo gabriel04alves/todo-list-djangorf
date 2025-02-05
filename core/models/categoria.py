@@ -6,6 +6,5 @@ class Categoria(models.Model):
     descricao = models.TextField(blank=True)
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, related_name="categorias")
 
-
     def __str__(self):
         return f"{self.nome} | {self.descricao}"

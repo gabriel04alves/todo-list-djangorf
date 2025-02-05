@@ -1,6 +1,7 @@
 from django.db import models
 from .user import User
 from .categoria import Categoria
+import datetime
 
 class Tarefa(models.Model):
     class StatusTarefa(models.TextChoices):
@@ -17,4 +18,4 @@ class Tarefa(models.Model):
     criado_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.titulo} | {self.categoria} | "
+        return f"{self.titulo} | {self.categoria}"
