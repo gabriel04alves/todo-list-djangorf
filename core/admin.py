@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from core.models import User, Tarefa, Categoria
 
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """Define the admin pages for users."""
@@ -56,9 +57,15 @@ class TarefaAdmin(admin.ModelAdmin):
     """Define the admin pages for tarefas."""
 
     ordering = ["id"]
-    list_display = ["titulo", "descricao", "status", "prazo", "categoria", "usuario"]
+    list_display = ["titulo", "descricao", "status", "prazo", "usuario", "get_categorias"]
     search_fields = ["titulo", "descricao"]
-    list_filter = ["status", "prazo", "categoria", "usuario"]
+    list_filter = ["status", "prazo", "categorias", "usuario"]
+
+    def get_categorias(self, obj):
+        return ", ".join([categoria.nome for categoria in obj.categorias.all()])
+
+    get_categorias.short_description = "Categorias"
+
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):

@@ -8,17 +8,26 @@ from rest_framework.serializers import (
     ValidationError,
 )
 from datetime import date
-from core.models import Tarefa
+from core.models import Tarefa, Categoria
+from core.serializers import CategoriaSerializer
 
 
 class TarefaSerializer(ModelSerializer):
     usuario = CharField(source="usuario.username", read_only=True)
-    categoria = CharField(source="categoria.nome")
+    categorias = CategoriaSerializer(many=True, read_only=True)
     criado_em = DateTimeField(read_only=True)
 
     class Meta:
         model = Tarefa
         fields = "__all__"
+
+    def create(self, validated_data):
+        categorias_data = self.initial_data.get("categorias")
+        tarefa = Tarefa.objects.create(**validated_data)
+        for categoria_data in categorias_data:
+            categoria, created = Categoria.objects.get_or_create(**categoria_data)
+            tarefa.categorias.add(categoria)
+        return tarefa
 
 
 class TarefaCreateUpdateSerializer(ModelSerializer):
