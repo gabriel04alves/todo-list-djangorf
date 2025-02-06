@@ -7,6 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 from django.db.models.aggregates import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from datetime import date
+from drf_spectacular.utils import extend_schema
+
 
 from core.models import Tarefa
 from core.serializers import TarefaSerializer
@@ -39,6 +41,7 @@ class TarefaViewSet(ModelViewSet):
         """Associate the user with the tarefa."""
         serializer.save(usuario=self.request.user)
 
+    @extend_schema(request=None)
     @action(detail=False, methods=["post"])
     def atualizar_status_atrasadas(self, request):
         tarefas_atrasadas = Tarefa.objects.filter(
@@ -46,3 +49,10 @@ class TarefaViewSet(ModelViewSet):
         )
         tarefas_atrasadas.update(status=Tarefa.StatusTarefa.ATRASADA)
         return Response({"status": "Tarefas atrasadas atualizadas com sucesso."}, status=status.HTTP_200_OK)
+
+    @extend_schema(request=None)
+    @action(detail=False, methods=["post"])
+    def concluir_todas_tarefas(self, request):
+        tarefas = Tarefa.objects.filter(status=Tarefa.StatusTarefa.EM_ANDAMENTO)
+        tarefas.update(status=Tarefa.StatusTarefa.CONCLUIDA)
+        return Response({"status": "Todas as tarefas em andamento foram concluídas."}, status=status.HTTP_200_OK)
