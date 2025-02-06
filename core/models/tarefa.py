@@ -9,6 +9,7 @@ class Tarefa(models.Model):
         PENDENTE = "pendente"
         EM_ANDAMENTO = "em_andamento"
         CONCLUIDA = "concluida"
+        ATRASADA = "atrasada"
 
     titulo = models.CharField(max_length=255)
     descricao = models.TextField(blank=True)
