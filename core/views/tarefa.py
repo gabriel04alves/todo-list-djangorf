@@ -19,6 +19,7 @@ class TarefaViewSet(ModelViewSet):
     """ViewSet for tarefas."""
 
     def get_queryset(self):
+        """Return the tarefas for the current user."""
         usuario = self.request.user
         if usuario.is_superuser:
             return Tarefa.objects.all()
@@ -33,6 +34,7 @@ class TarefaViewSet(ModelViewSet):
     search_fields = ["titulo", "descricao"]
 
     def get_serializer_class(self):
+        """Return the serializer class based on the action."""
         if self.action in ["create", "update", "partial_update"]:
             return TarefaCreateUpdateSerializer
         return TarefaSerializer
@@ -43,7 +45,8 @@ class TarefaViewSet(ModelViewSet):
 
     @extend_schema(request=None)
     @action(detail=False, methods=["post"])
-    def atualizar_status_atrasadas(self, request):
+    def update_overdue_tasks(self, request):
+        """Update the status of overdue tasks."""
         tarefas_atrasadas = Tarefa.objects.filter(
             prazo__lt=date.today(), status__in=[Tarefa.StatusTarefa.PENDENTE, Tarefa.StatusTarefa.EM_ANDAMENTO]
         )
@@ -52,7 +55,8 @@ class TarefaViewSet(ModelViewSet):
 
     @extend_schema(request=None)
     @action(detail=False, methods=["post"])
-    def concluir_todas_tarefas(self, request):
+    def complete_all_tasks(self, request):
+        """Mark all tasks in progress as completed."""
         tarefas = Tarefa.objects.filter(status=Tarefa.StatusTarefa.EM_ANDAMENTO)
         tarefas.update(status=Tarefa.StatusTarefa.CONCLUIDA)
         return Response({"status": "Todas as tarefas em andamento foram concluídas."}, status=status.HTTP_200_OK)

@@ -5,7 +5,7 @@ import datetime
 
 
 class Tarefa(models.Model):
-    class StatusTarefa(models.TextChoices):
+    class TaskStatus(models.TextChoices):
         PENDENTE = "pendente"
         EM_ANDAMENTO = "em_andamento"
         CONCLUIDA = "concluida"
@@ -13,7 +13,7 @@ class Tarefa(models.Model):
 
     titulo = models.CharField(max_length=255)
     descricao = models.TextField(blank=True)
-    status = models.CharField(max_length=15, choices=StatusTarefa.choices, default=StatusTarefa.PENDENTE)
+    status = models.CharField(max_length=15, choices=TaskStatus.choices, default=TaskStatus.PENDENTE)
     prazo = models.DateField()
     categorias = models.ManyToManyField(Categoria, related_name="tarefas")
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, related_name="tarefas")

@@ -33,7 +33,7 @@ class CategoriaViewSet(ModelViewSet):
         serializer.save(usuario=self.request.user)
 
     @action(detail=False, methods=["get"])
-    def total_por_categoria(self, request):
+    def total_by_category(self, request):
         """Return the total of tarefas per categoria for the authenticated user."""
         usuario = request.user
         if usuario.is_superuser or usuario.groups.filter(name="admin").exists():
