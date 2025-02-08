@@ -48,15 +48,15 @@ class TarefaViewSet(ModelViewSet):
     def update_overdue_tasks(self, request):
         """Update the status of overdue tasks."""
         tarefas_atrasadas = Tarefa.objects.filter(
-            prazo__lt=date.today(), status__in=[Tarefa.StatusTarefa.PENDENTE, Tarefa.StatusTarefa.EM_ANDAMENTO]
+            prazo__lt=date.today(), status__in=[Tarefa.TaskStatus.PENDENTE, Tarefa.TaskStatus.EM_ANDAMENTO]
         )
-        tarefas_atrasadas.update(status=Tarefa.StatusTarefa.ATRASADA)
+        tarefas_atrasadas.update(status=Tarefa.TaskStatus.ATRASADA)
         return Response({"status": "Tarefas atrasadas atualizadas com sucesso."}, status=status.HTTP_200_OK)
 
     @extend_schema(request=None)
     @action(detail=False, methods=["post"])
     def complete_all_tasks(self, request):
         """Mark all tasks in progress as completed."""
-        tarefas = Tarefa.objects.filter(status=Tarefa.StatusTarefa.EM_ANDAMENTO)
-        tarefas.update(status=Tarefa.StatusTarefa.CONCLUIDA)
+        tarefas = Tarefa.objects.filter(status=Tarefa.TaskStatus.EM_ANDAMENTO)
+        tarefas.update(status=Tarefa.TaskStatus.CONCLUIDA)
         return Response({"status": "Todas as tarefas em andamento foram concluídas."}, status=status.HTTP_200_OK)
